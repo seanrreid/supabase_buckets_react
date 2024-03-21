@@ -1,9 +1,11 @@
 import { useLoaderData, Form } from 'react-router-dom';
 import supabase from '../supabase';
 
+import MyForm from '../components/Form';
+
 export const loader = async () => {
     try {
-        const { data, error } = await supabase.storage.listBuckets();
+        const { data } = await supabase.storage.listBuckets();
         return data;
     } catch (error) {
         return error;
@@ -14,16 +16,16 @@ export const action = async ({ request }) => {
     const formData = await request.formData();
     const photo = formData.get('photo');
     try {
-        console.log("PHOTO", photo)
+        console.log('PHOTO', photo);
         if (photo instanceof File) {
             const fileName = photo.name;
 
             const { data, error } = await supabase.storage
                 .from('profile-photos')
                 .upload(`test/${fileName}`, photo);
-            console.log("data, or error", data, error)
+            console.log('data, or error', data, error);
         } else {
-            console.log("NOT A PHOTO??")
+            console.log('NOT A PHOTO??');
         }
         return null;
     } catch (error) {
@@ -44,6 +46,8 @@ const Home = () => {
                 <input type='file' id='photo' name='photo' accept='image/*' />
                 <button type='submit'>Add Photo</button>
             </Form>
+            <br />
+            <MyForm />
         </>
     );
 };
